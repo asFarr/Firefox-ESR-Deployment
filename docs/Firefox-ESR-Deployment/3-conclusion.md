@@ -32,5 +32,28 @@ Execute-MSI -Action Uninstall -Path 'Firefox Setup 102.0esr.msi'
 the following error is generated in the output logs:
 
 ```
+[Uninstallation] :: Skipping removal of application [Mozilla Firefox ESR (x64 en-US)] because unable to discover MSI ProductCode from application's registry Uninstall subkey [Mozilla Firefox 102.0 ESR (x64 en-US)]
+```
+
+This appears to stem from the fact that PSADT expects an MSI code to be in `UninstallString` instead of a path to a helper exe. Currently PSADT is passing a filepath to `msiexec.exe -x` instead of the MSI code it needs to run correctly.  
+
+Likewise, when attempting to target the `UninstallString` key of Firefox's Uninstall entry in the registry using: 
 
 ```
+$uninstallPath = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mozilla Firefox 102.0 ESR (x64 en-US)' -Name UninstallString
+
+Execute-Process -Path $uninstallPath -Parameters '/S'
+```
+
+the following error is generated in the output logs: 
+
+```
+[Uninstallation] :: Function failed, setting exit code to [60002]. 
+Error Record:
+-------------At C:\Users\leToads\Firefox-ESR-Deployment\src\FirefoxESR\AppDeployToolkit\AppDeployToolkitMain.ps1:3055 char:8
++ ...         If (([IO.Path]::IsPathRooted($Path)) -and ([IO.Path]::HasExte ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Error Inner Exception(s):
+-------------------------
+```
+
