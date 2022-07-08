@@ -7,7 +7,7 @@ Last Updated 07/08/22: Alex Farr
 ## Abstract
 This article is intended to document the considerations and workflow behind the packaging process.
 
-Questions: 
+Questions to guide research: 
 - How do I check for Firefox's version? Mozilla Docs?
 		- Firefox's version is going to be checked by SCCM most effectively. This should not be done in the PowerShell script itself. 
 - Where is the user's default homepage RegKey? Or how can this be managed through GPO? Autoconfig? What are the pros and cons of implementing each of them?
@@ -26,62 +26,62 @@ After environment and workspace are set up, open `src\FirefoxESR\Deploy-Applicat
 
 Under the variable declaration section, modify lines 64-72 to the relevant application information for Firefox: 
 
-```
-64: $appVendor = 'Mozilla'
-65: $appName = 'Firefox ESR'
-66: $appVersion = '102.0'
-67: $appArch = 'x64'
+```powershell
+64: [string]$appVendor = 'Mozilla'
+65: [string]$appName = 'Firefox ESR'
+66: [string]$appVersion = '102.0'
+67: [string]$appArch = 'x64'
 . . .
-71: $appScriptDate = '07/08/2022'
-72: $appScriptAuthor = 'Alex Farr'
+71: [string]$appScriptDate = '07/08/2022'
+72: [string]$appScriptAuthor = 'Alex Farr'
 ```
 
-Modify the `-CloseApps` flag on line 120 in the preinstallation section, and line 152 in pre-uninstallation to attempt to close any currently active Firefox processes instead of Internet Exploder.
+Add line 120 to act as a dev warning if the `NonInteractive` flag is not passed to the script during deployment:
 
-```
-120: Show-InstallationWelcome -CloseApps 'firefox' -AllowDefer -DeferTimes 3 -CheckDiskSpace -PersistPrompt
-```
-
-```
-150: Show-InstallationWelcome -CloseApps 'firefox' -CloseAppsCountdown 60
+```powershell
+120: If (-not $useDefaultMsi) { Show-InstallationPrompt -Message 'NOTE: Without executing under NonInteractive there will be progress pop-ups from Mozilla.' -ButtonRightText 'OK' -Icon Information -NoWait }
 ```
 
-Under the installation section, remove the MSI autorun template materials and add line 131 to run the Firefox MSI with `Execute-MSI`.
+Modify line 123 in the preinstallation section, and line 153 in pre-uninstallation to attempt to close any currently active Firefox processes:
 
-```
-131: Execute-MSI -Action Install -Path 'Firefox Setup 102.0esr.msi'
-```
-
-Under the post-installation section, add lines 139 and 140 which use `Copy-File` to drop in the autoconfig files from `src\FirefoxESR\SupportFiles` into `C:\Program Files\Mozilla Firefox\` and `..\defaults\pref\`  in order to force default the homepage to ung.edu. 
-
-```
-139: Copy-File -Path 'autoconfig.js' -Destination "C:\Program Files\Mozilla Firefox\defaults\pref"
-
-140: Copy-File -Path 'ung.cfg' -Destination "C:\Program Files\Mozilla Firefox"
+```powershell
+123: Show-InstallationWelcome -CloseApps 'firefox' -CloseAppsCountdown 60
 ```
 
-Then modify line 143 to reflect the proper application name in the notification box upon completion. 
-
-```
-143: Show-InstallationPrompt -Message 'Firefox ESR 102.0 has been installed successfully.' -ButtonRightText 'OK' -Icon Information -NoWait
+```powershell
+153: Show-InstallationWelcome -CloseApps 'firefox' -CloseAppsCountdown 60
 ```
 
-Modify line 162 in the uninstallation section to run the uninstall helper exe with `Execute-Process`.
+Under the installation section, remove the MSI autorun template materials and add line 132 to run the Firefox MSI with `Execute-MSI` and pass it the flags `-ms`:
 
+```powershell
+132: Execute-MSI -Action Install -Path 'Firefox Setup 102.0esr.msi' -Parameters '-ms'
 ```
-162: Execute-Process -Path 'C:\Program Files\Mozilla Firefox\uninstall\helper.exe' -Parameters '/S'
+
+Under the post-installation section, add lines 141 and 142 which use `Copy-File` to drop in the autoconfig files from `src\FirefoxESR\SupportFiles` into `C:\Program Files\Mozilla Firefox\` and `..\defaults\pref\`  in order to force default the homepage to ung.edu:
+
+```powershell
+141: Copy-File -Path 'autoconfig.js' -Destination "C:\Program Files\Mozilla Firefox\defaults\pref"
+
+142: Copy-File -Path 'ung.cfg' -Destination "C:\Program Files\Mozilla Firefox"
+```
+
+Modify line 161 in the uninstallation section to run the uninstall helper exe with `Execute-Process`:
+
+```powershell
+161: Execute-Process -Path 'C:\Program Files\Mozilla Firefox\uninstall\helper.exe' -Parameters '/S'
 ```
 
 Before testing, the autoconfig files need to be built. Create `autoconfig.js` and `ung.cfg` in `src\FirefoxESR\SupportFiles`. Edit `autoconfig.js` to contain the following: 
 
-```
+```js
 1: pref("general.config.filename", "ung.cfg");
 2: pref("general.config.obscure_value", 0);
 ```
 
 Then modify `ung.cfg` to contain: 
 
-```
+```js
 1: // Obligatory non-executable first line.
 2: defaultPref("browser.startup.homepage", "data:text/plain,browser.startup.homepage=https://www.ung.edu");
 ```
@@ -90,7 +90,7 @@ Since PSADT has verbose logging, refer to the Firefox logs at `C:\Windows\Logs\S
 
 #### Issues
 
-The `Execute-Process` call for uninstallation on line 161 is using an absolute path to the helper exe which is less than ideal, however the PSADT `Execute-MSI` route referencing the packaged MSI fails to locate the installed application through registry checking, as does resolving the same literal path through the registry that PSADT should have searched for by using `Get-ItemPropertyValue` and then providing that to the `-Path 
+The `Execute-Process` call for uninstallation on line 162 is using an absolute path to the helper exe which is less than ideal, however the PSADT `Execute-MSI` route referencing the packaged MSI fails to locate the installed application through registry checking, as does resolving the same literal path through the registry that PSADT should have searched for by using `Get-ItemPropertyValue` and then providing that to the `-Path 
  flag of `Execute-MSI`.
 
 ---

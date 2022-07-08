@@ -6,7 +6,7 @@ Last Updated 07/08/22: Alex Farr
 ---
 ## Abstract
 
-This article contains a retrospective descriptive analysis of the Firefox: ESR packaged solution after completion. 
+This article contains a retrospective analysis of the Firefox: ESR packaged solution after completion. 
 
 ---
 ## Content
@@ -23,13 +23,15 @@ Following these setup procedures, the modifications to `Deploy-Application.ps1` 
 
 #### Supplemental Configuration
 
-Given that version detection built into the PowerShell script for PSADT would not only be probably another 20+ lines, but would also limit our ability to keep the deployment environment in compliance if it is only executed when the package is deployed. As such, a supporting PowerShell script should be built into the SCCM Package as a custom script detection method so that the version state can be polled from the client independently of the install process. This allows for responsive compliance manag updating in the case of a user initiated rollback
+Version detection built into the PowerShell script would likely limit the ability to keep the deployment environment in compliance if it is only executed when the package is deployed. A supporting PowerShell script should be built into the Firefox deployment package in SCCM as a custom script detection method so that the version number can be polled from the client independently of the install process. This allows for more highly responsive compliance management in the case of a user initiated rollback for instance. 
+
+In practice, the script would pull the value of `CurrentVersion` from `HKLM:SOFTWARE\Mozilla\Mozilla Firefox ESR\` on the target host and process a regular expression match such as `([0-9])\d+` into a new comparable value consisting of only the major version number. This can be logically compared to ensure that the installed version is greater-than or equal-to the target deployment version, and the script can return a response to the SCCM Server if the device is compliant. This will allow for updates to be installed by the user without being rolled back into compliance with the deployed version. Alternatively, strict matching can be enforced to force rollbacks from unsupported updates initiated by the user. 
 
 #### Notes
 
-As pointed out in the Issues heading of [Main Process Worknotes](process.md), this particular MSI has a problem with uninstallation. It was not possible in the time allotted to investigate in-depth how to work through these issues, as they appear to be rooted in how the MSI sets up it's registry values during installation and would likely require modification of the MSI itself. When attempting to uninstall Firefox ESR using:
+As pointed out in the Issues heading of [Main Process Worknotes](process.md), this particular MSI has a problem with uninstallation. These issues appear to be rooted in how the MSI sets up it's registry values during installation and would likely require modification of the MSI itself. When attempting to uninstall Firefox ESR using:
 
-```
+```powershell
 Execute-MSI -Action Uninstall -Path 'Firefox Setup 102.0esr.msi'
 ```
 
@@ -43,7 +45,7 @@ This appears to stem from the fact that PSADT expects an MSI code to be in `Unin
 
 Likewise, when attempting to target the `UninstallString` key of Firefox's Uninstall entry in the registry using: 
 
-```
+```powershell
 $uninstallPath = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mozilla Firefox 102.0 ESR (x64 en-US)' -Name UninstallString
 
 Execute-Process -Path $uninstallPath -Parameters '/S'
@@ -61,3 +63,4 @@ Error Inner Exception(s):
 -------------------------
 ```
 
+This appears to be an error internal to the PSADT toolkit, and would take more time to research a solution for. However it could be the basis of a more reliable implementation if resolved. 

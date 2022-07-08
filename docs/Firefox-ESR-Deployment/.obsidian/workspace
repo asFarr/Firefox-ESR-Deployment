@@ -10,7 +10,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "1-prep.md",
+            "file": "0-index.md",
             "mode": "source",
             "source": false
           }
@@ -96,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "3-conclusion.md",
+                "file": "0-index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,12 +114,12 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "b3db327379526472",
+  "active": "89dee11dc0f7bddc",
   "lastOpenFiles": [
+    "0-index.md",
+    "1-prep.md",
     "3-conclusion.md",
     "2-process.md",
-    "1-prep.md",
-    "0-index.md",
     "template.md"
   ]
 }

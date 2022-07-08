@@ -116,11 +116,11 @@ Try {
 		##*===============================================
 		[string]$installPhase = 'Pre-Installation'
 
-		## Show Welcome Message, close Firefox if required, allow up to 3 deferrals, verify there is enough disk space to complete the install, and persist the prompt
-		Show-InstallationWelcome -CloseApps 'firefox' -AllowDefer -DeferTimes 3 -CheckDiskSpace -PersistPrompt
+		## Dev warning for if the script execution call in the deployment isn't set NonInteractive
+		If (-not $useDefaultMsi) { Show-InstallationPrompt -Message 'NOTE: Without executing under NonInteractive there will be progress pop-ups from Mozilla.' -ButtonRightText 'OK' -Icon Information -NoWait }
 
-		## Show Progress Message (with the default message)
-		Show-InstallationProgress
+		## Close Firefox
+		Show-InstallationWelcome -CloseApps 'firefox' -CloseAppsCountdown 60
 		
 
 		##*===============================================
@@ -128,7 +128,8 @@ Try {
 		##*===============================================
 		[string]$installPhase = 'Installation'
 
-		Execute-MSI -Action Install -Path 'Firefox Setup 102.0esr.msi'
+		## Install Firefox with default settings and suppress prompts
+		Execute-MSI -Action Install -Path 'Firefox Setup 102.0esr.msi' -Parameters '-ms'
 
 
 		##*===============================================
@@ -136,11 +137,11 @@ Try {
 		##*===============================================
 		[string]$installPhase = 'Post-Installation'
 
+		## Copy the configuration files for default homepage settings into install directory
 		Copy-File -Path 'autoconfig.js' -Destination "C:\Program Files\Mozilla Firefox\defaults\pref"
 		Copy-File -Path 'ung.cfg' -Destination "C:\Program Files\Mozilla Firefox"
 
-		## Display a message at the end of the install
-		If (-not $useDefaultMsi) { Show-InstallationPrompt -Message 'Firefox ESR 102.0 has been installed successfully.' -ButtonRightText 'OK' -Icon Information -NoWait }
+
 	}
 	ElseIf ($deploymentType -ieq 'Uninstall')
 	{
@@ -150,8 +151,6 @@ Try {
 		[string]$installPhase = 'Pre-Uninstallation'
 
 		Show-InstallationWelcome -CloseApps 'firefox' -CloseAppsCountdown 60
-
-		Show-InstallationProgress
 
 
 		##*===============================================
