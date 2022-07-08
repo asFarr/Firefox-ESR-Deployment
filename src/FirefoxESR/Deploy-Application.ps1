@@ -68,7 +68,7 @@ Try {
 	[string]$appLang = 'EN'
 	[string]$appRevision = '01'
 	[string]$appScriptVersion = '1.0.0'
-	[string]$appScriptDate = '07/06/2022'
+	[string]$appScriptDate = '07/08/2022'
 	[string]$appScriptAuthor = 'Alex Farr'
 	##*===============================================
 	## Variables: Install Titles (Only set here to override defaults set by the toolkit)
@@ -116,6 +116,7 @@ Try {
 		##*===============================================
 		[string]$installPhase = 'Pre-Installation'
 
+		## Show Welcome Message, close Firefox if required, allow up to 3 deferrals, verify there is enough disk space to complete the install, and persist the prompt
 		Show-InstallationWelcome -CloseApps 'firefox' -AllowDefer -DeferTimes 3 -CheckDiskSpace -PersistPrompt
 
 		## Show Progress Message (with the default message)

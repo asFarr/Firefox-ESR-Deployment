@@ -4,12 +4,39 @@
     "type": "split",
     "children": [
       {
+        "id": "89dee11dc0f7bddc",
+        "type": "leaf",
+        "dimension": 30.45195261079421,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "1-prep.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      },
+      {
         "id": "a874c7716464aee1",
         "type": "leaf",
+        "dimension": 34.444931987713915,
         "state": {
           "type": "markdown",
           "state": {
             "file": "2-process.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      },
+      {
+        "id": "b3db327379526472",
+        "type": "leaf",
+        "dimension": 35.10311540149188,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "3-conclusion.md",
             "mode": "source",
             "source": false
           }
@@ -69,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2-process.md",
+                "file": "3-conclusion.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -87,11 +114,11 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "a874c7716464aee1",
+  "active": "b3db327379526472",
   "lastOpenFiles": [
-    "2-process.md",
-    "1-prep.md",
     "3-conclusion.md",
+    "1-prep.md",
+    "2-process.md",
     "0-index.md",
     "template.md"
   ]

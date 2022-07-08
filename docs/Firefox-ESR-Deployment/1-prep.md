@@ -5,10 +5,12 @@ Last Updated 07/06/22: Alex Farr
 
 ___
 ## Abstract
+
 This article is intended to document the preparation steps necessary and the environment setup required for testing purposes in the packaging of Firefox: ESR.
 
 ___
 ## Content
+
 #### The Challenge
 ##### Assignment: 
 Create a PowerShell Script for installing Firefox ESR along with some documenation of your process of going about the task/thought process. 
@@ -42,6 +44,7 @@ Hyper-V nodes:
 
 ___
 ## Resources
+
 - [PSAppDeployToolkit](https://www.psappdeploytoolkit.com/)
 - [Firefox](https://www.mozilla.org/en-US/firefox/)
 - [VS Code](https://code.visualstudio.com/)
