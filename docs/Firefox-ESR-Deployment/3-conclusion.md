@@ -21,6 +21,10 @@ According to the documentation for PSADT, the toolkit folder is a portable frame
 
 Following these setup procedures, the modifications to `Deploy-Application.ps1` that are described in [Main Process Worknotes](process.md) can be carried out, the details of which will be omitted here for organizational clarity. 
 
+#### Supplemental Configuration
+
+Given that version detection built into the PowerShell script for PSADT would not only be probably another 20+ lines, but would also limit our ability to keep the deployment environment in compliance if it is only executed when the package is deployed. As such, a supporting PowerShell script should be built into the SCCM Package as a custom script detection method so that the version state can be polled from the client independently of the install process. This allows for responsive compliance manag updating in the case of a user initiated rollback
+
 #### Notes
 
 As pointed out in the Issues heading of [Main Process Worknotes](process.md), this particular MSI has a problem with uninstallation. It was not possible in the time allotted to investigate in-depth how to work through these issues, as they appear to be rooted in how the MSI sets up it's registry values during installation and would likely require modification of the MSI itself. When attempting to uninstall Firefox ESR using:
