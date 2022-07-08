@@ -4,39 +4,12 @@
     "type": "split",
     "children": [
       {
-        "id": "89dee11dc0f7bddc",
+        "id": "95fa855dc4d29d74",
         "type": "leaf",
-        "dimension": 30.45195261079421,
         "state": {
           "type": "markdown",
           "state": {
             "file": "0-index.md",
-            "mode": "source",
-            "source": false
-          }
-        }
-      },
-      {
-        "id": "a874c7716464aee1",
-        "type": "leaf",
-        "dimension": 34.444931987713915,
-        "state": {
-          "type": "markdown",
-          "state": {
-            "file": "2-process.md",
-            "mode": "source",
-            "source": false
-          }
-        }
-      },
-      {
-        "id": "b3db327379526472",
-        "type": "leaf",
-        "dimension": 35.10311540149188,
-        "state": {
-          "type": "markdown",
-          "state": {
-            "file": "3-conclusion.md",
             "mode": "source",
             "source": false
           }
@@ -114,7 +87,7 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "89dee11dc0f7bddc",
+  "active": "95fa855dc4d29d74",
   "lastOpenFiles": [
     "0-index.md",
     "1-prep.md",
