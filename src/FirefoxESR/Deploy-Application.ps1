@@ -157,7 +157,7 @@ Try {
 		##* UNINSTALLATION
 		##*===============================================
 		[string]$installPhase = 'Uninstallation'
-		
+
 		Execute-Process -Path 'C:\Program Files\Mozilla Firefox\uninstall\helper.exe' -Parameters '/S'
 
 
