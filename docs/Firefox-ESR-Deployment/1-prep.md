@@ -26,24 +26,19 @@ Hyper-V nodes:
 
 
 #### Preparation steps: 
-- Add initial challenge scope for reference.
 - Setup workspace folder and add Obsidian vault and VSCode project folder templates. 
-- Pull required online resources. 
-- Copy necessary online resources into workspace. 
+- Add initial challenge scope for reference.
+- Pull required online resources: PSADT, and Firefox ESR MSI. 
+- Assemble the directory structure and resource files into the deployment package.
+- Create a git repository around the package, and push to GitHub.
+- Clone repository into Hyper-V dev workspace. 
 
 
 #### Considerations: 
 - Version checking
 - Registry key, Group Policy Object, or autoconfig file for default homepage requirements
-- Keep brainstorming more considerations to watch out for...
+- MSI flags for Firefox installer
 
-
-#### Primary Workflow: 
-- Modify `Deploy-Application.ps1` to fit requirements and considerations. Refer to [Main Process Worknotes](2-process.md).
-
-
-#### Testing and Conclusions:
-- Document testing approach, as well as advantages and limitations of the implementation. Refer to [Conclusion and Closing Notes](3-conclusion.md).
 
 ___
 ## Resources

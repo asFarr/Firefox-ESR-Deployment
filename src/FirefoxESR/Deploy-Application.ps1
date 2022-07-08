@@ -120,13 +120,6 @@ Try {
 
 		## Show Progress Message (with the default message)
 		Show-InstallationProgress
-
-		$versionNum = Get-ItemPropertyValue -Path 'HKLM:SOFTWARE\Mozilla\Mozilla Firefox ESR\' -Name CurrentVersion
-
-		If ($versionNum)
-		{
-			Execute-Process -Path 'C:\Program Files\Mozilla Firefox\uninstall\helper.exe' -Parameters '/S'
-		}
 		
 
 		##*===============================================
@@ -142,7 +135,8 @@ Try {
 		##*===============================================
 		[string]$installPhase = 'Post-Installation'
 
-		## <Perform Post-Installation tasks here>
+		Copy-File -Path 'autoconfig.js' -Destination "C:\Program Files\Mozilla Firefox\defaults\pref"
+		Copy-File -Path 'ung.cfg' -Destination "C:\Program Files\Mozilla Firefox"
 
 		## Display a message at the end of the install
 		If (-not $useDefaultMsi) { Show-InstallationPrompt -Message 'Firefox ESR 102.0 has been installed successfully.' -ButtonRightText 'OK' -Icon Information -NoWait }
